@@ -1,0 +1,1393 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nestlé — Dashboard RR.HH.</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;600;700;800&display=swap");
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --red: #d72b2b;
+        --dark: #111111;
+        --mid: #444444;
+        --muted: #888888;
+        --soft: #f5f3ef;
+        --white: #ffffff;
+        --border: #e4e1db;
+        --sidebar: #1c1c1c;
+        --sidebar-active: #d72b2b;
+        --green: #2a9b5b;
+        --amber: #e07b0d;
+        --radius: 12px;
+        --tr: 0.3s ease;
+      }
+
+      html,
+      body {
+        height: 100%;
+        font-family: "Noto Sans", sans-serif;
+        background: var(--soft);
+        color: var(--dark);
+        overflow: hidden;
+      }
+
+      /* ── LAYOUT ─────────────────────────────────────────────── */
+      .shell {
+        display: flex;
+        height: 100vh;
+      }
+
+      /* ── SIDEBAR ─────────────────────────────────────────────── */
+      .sidebar {
+        width: 230px;
+        flex-shrink: 0;
+        background: var(--sidebar);
+        display: flex;
+        flex-direction: column;
+        padding: 0 0 24px;
+        overflow-y: auto;
+      }
+      .sidebar-logo {
+        padding: 22px 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        margin-bottom: 12px;
+      }
+      .sidebar-logo img {
+        height: 28px;
+        filter: brightness(0) invert(1);
+      }
+      .sidebar-logo span {
+        display: block;
+        margin-top: 6px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .sidebar-section {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.3);
+        padding: 14px 24px 6px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 24px;
+        font-size: 13px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.55);
+        cursor: pointer;
+        border-radius: 0;
+        transition: all var(--tr);
+        border-left: 3px solid transparent;
+      }
+      .nav-item i {
+        width: 18px;
+        text-align: center;
+        font-size: 14px;
+      }
+      .nav-item:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .nav-item.active {
+        color: #fff;
+        border-left-color: var(--red);
+        background: rgba(215, 43, 43, 0.12);
+      }
+
+      .sidebar-footer {
+        margin-top: auto;
+        padding: 16px 24px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .admin-badge {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .admin-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--red);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .admin-info {
+        flex: 1;
+      }
+      .admin-name {
+        font-size: 12px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .admin-role {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.35);
+        margin-top: 1px;
+      }
+
+      /* ── MAIN ────────────────────────────────────────────────── */
+      .main {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .topbar {
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        padding: 0 32px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-shrink: 0;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      .topbar-title {
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .btn-sm {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all var(--tr);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .btn-ghost {
+        border: 1.5px solid var(--border);
+        background: transparent;
+        color: var(--mid);
+      }
+      .btn-ghost:hover {
+        border-color: var(--mid);
+      }
+      .btn-red {
+        border: none;
+        background: var(--red);
+        color: #fff;
+      }
+      .btn-red:hover {
+        background: #b82020;
+      }
+
+      .content {
+        padding: 28px 32px;
+      }
+
+      /* ── SECTIONS ────────────────────────────────────────────── */
+      .section {
+        display: none;
+      }
+      .section.active {
+        display: block;
+        animation: fadeUp 0.35s ease;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .page-header {
+        margin-bottom: 24px;
+      }
+      .page-header h1 {
+        font-size: 20px;
+        font-weight: 800;
+      }
+      .page-header p {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+
+      /* ── STAT CARDS ──────────────────────────────────────────── */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .stat-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: 20px 20px 18px;
+        border: 1px solid var(--border);
+      }
+      .stat-eyebrow {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+      .stat-value {
+        font-size: 28px;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .stat-delta {
+        font-size: 12px;
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .delta-up {
+        color: var(--green);
+      }
+      .delta-down {
+        color: var(--red);
+      }
+
+      /* ── CHARTS GRID ─────────────────────────────────────────── */
+      .charts-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .chart-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        padding: 20px 24px;
+      }
+      .chart-title {
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .chart-sub {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 20px;
+      }
+
+      .bar-chart {
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+        height: 130px;
+      }
+      .bar-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+      .bar {
+        width: 100%;
+        border-radius: 6px 6px 0 0;
+        min-height: 4px;
+        transition: height 0.5s ease;
+      }
+      .bar-label {
+        font-size: 10px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      .emoji-dist {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .emoji-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .emoji-row i {
+        font-size: 20px;
+        width: 26px;
+        text-align: center;
+      }
+      .emoji-row .track {
+        flex: 1;
+        height: 8px;
+        background: #f0ede8;
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .emoji-row .fill {
+        height: 100%;
+        border-radius: 99px;
+      }
+      .emoji-row .pct {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--mid);
+        width: 34px;
+        text-align: right;
+      }
+
+      /* ── SURVEY TABLE ─────────────────────────────────────────── */
+      .table-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        overflow: hidden;
+        margin-bottom: 24px;
+      }
+      .table-head {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .table-head strong {
+        font-size: 13px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: 10px 20px;
+        text-align: left;
+        background: var(--soft);
+        border-bottom: 1px solid var(--border);
+      }
+      td {
+        padding: 12px 20px;
+        font-size: 13px;
+        border-bottom: 1px solid var(--border);
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      tr:hover td {
+        background: #fafaf8;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 10px;
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .badge-green {
+        background: #e6f5ee;
+        color: #1d7a48;
+      }
+      .badge-amber {
+        background: #fdf2e4;
+        color: #9b570a;
+      }
+      .badge-red {
+        background: #fdeaea;
+        color: #a42020;
+      }
+
+      /* ── EXPORT PANEL ─────────────────────────────────────────── */
+      .export-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+      .export-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        padding: 24px 20px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all var(--tr);
+      }
+      .export-card:hover {
+        border-color: var(--red);
+        box-shadow: 0 4px 16px rgba(215, 43, 43, 0.08);
+      }
+      .export-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 14px;
+        font-size: 22px;
+      }
+      .export-card h3 {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .export-card p {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      /* ── CONFIG SECTION ───────────────────────────────────────── */
+      .config-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .config-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        padding: 20px 22px;
+      }
+      .config-card h3 {
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .config-card h3 i {
+        color: var(--red);
+      }
+
+      .config-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+      }
+      .config-row:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .config-row span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .toggle {
+        width: 40px;
+        height: 22px;
+        border-radius: 99px;
+        position: relative;
+        cursor: pointer;
+        transition: background var(--tr);
+      }
+      .toggle.on {
+        background: var(--green);
+      }
+      .toggle.off {
+        background: #d4d0ca;
+      }
+      .toggle::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #fff;
+        transition: left var(--tr);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+      .toggle.on::after {
+        left: 21px;
+      }
+      .toggle.off::after {
+        left: 3px;
+      }
+
+      .color-swatch {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: var(--tr);
+      }
+      .color-swatch.active,
+      .color-swatch:hover {
+        border-color: var(--dark);
+        transform: scale(1.1);
+      }
+
+      /* ── MODAL EXPORT ─────────────────────────────────────────── */
+      .modal-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 50;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-backdrop.open {
+        display: flex;
+      }
+      .modal {
+        background: var(--white);
+        border-radius: 16px;
+        padding: 32px 28px;
+        width: 380px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        animation: fadeUp 0.25s ease;
+      }
+      .modal h3 {
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .modal p {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 24px;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <!-- SIDEBAR -->
+      <nav class="sidebar">
+        <div class="sidebar-logo">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/sco/thumb/d/d8/Nestl%C3%A9.svg/3840px-Nestl%C3%A9.svg.png"
+            alt="Nestlé"
+          />
+          <span>Recursos Humanos</span>
+        </div>
+
+        <p class="sidebar-section">Principal</p>
+        <div class="nav-item active" onclick="goTo('resumen', this)">
+          <i class="fa-solid fa-chart-pie"></i> Resumen
+        </div>
+        <div class="nav-item" onclick="goTo('encuestas', this)">
+          <i class="fa-solid fa-clipboard-list"></i> Encuestas
+        </div>
+        <div class="nav-item" onclick="goTo('trabajadores', this)">
+          <i class="fa-solid fa-users"></i> Trabajadores
+        </div>
+
+        <p class="sidebar-section">Datos</p>
+        <div class="nav-item" onclick="goTo('exportar', this)">
+          <i class="fa-solid fa-file-export"></i> Exportar
+        </div>
+        <div class="nav-item" onclick="goTo('historial', this)">
+          <i class="fa-solid fa-clock-rotate-left"></i> Historial
+        </div>
+
+        <p class="sidebar-section">Sistema</p>
+        <div class="nav-item" onclick="goTo('configuracion', this)">
+          <i class="fa-solid fa-sliders"></i> Configuración
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="admin-badge">
+            <div class="admin-avatar">MR</div>
+            <div class="admin-info">
+              <p class="admin-name">María Rodríguez</p>
+              <p class="admin-role">Gerente RR.HH.</p>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- MAIN -->
+      <div class="main">
+        <div class="topbar">
+          <span class="topbar-title" id="topbarTitle">Resumen General</span>
+          <div class="topbar-right">
+            <button class="btn-sm btn-ghost" onclick="openExportModal()">
+              <i class="fa-solid fa-download"></i> Exportar
+            </button>
+            <button class="btn-sm btn-red">
+              <i class="fa-solid fa-plus"></i> Nueva encuesta
+            </button>
+          </div>
+        </div>
+
+        <div class="content">
+          <!-- ── RESUMEN ─────────────────────────────────── -->
+          <div class="section active" id="section-resumen">
+            <div class="page-header">
+              <h1>Resumen General</h1>
+              <p>
+                Semana del 2 al 8 de junio, 2025 &nbsp;·&nbsp; Planta Zona 12
+              </p>
+            </div>
+
+            <div class="stats-row">
+              <div class="stat-card">
+                <p class="stat-eyebrow">Respuestas hoy</p>
+                <p class="stat-value">47</p>
+                <p class="stat-delta delta-up">
+                  <i class="fa-solid fa-arrow-trend-up"></i> +12% vs ayer
+                </p>
+              </div>
+              <div class="stat-card">
+                <p class="stat-eyebrow">Bienestar promedio</p>
+                <p class="stat-value">
+                  3.8<span style="font-size: 15px; color: var(--muted)"
+                    >/5</span
+                  >
+                </p>
+                <p class="stat-delta delta-down">
+                  <i class="fa-solid fa-arrow-trend-down"></i> -0.3 esta semana
+                </p>
+              </div>
+              <div class="stat-card">
+                <p class="stat-eyebrow">Tasa de participación</p>
+                <p class="stat-value">
+                  84<span style="font-size: 15px; color: var(--muted)">%</span>
+                </p>
+                <p class="stat-delta delta-up">
+                  <i class="fa-solid fa-arrow-trend-up"></i> +5% esta semana
+                </p>
+              </div>
+              <div class="stat-card">
+                <p class="stat-eyebrow">Alertas activas</p>
+                <p class="stat-value" style="color: var(--red)">1</p>
+                <p class="stat-delta" style="color: var(--muted)">
+                  <i
+                    class="fa-solid fa-triangle-exclamation"
+                    style="color: var(--red)"
+                  ></i>
+                  Requiere atención inmediata
+                </p>
+              </div>
+            </div>
+
+            <div class="charts-row">
+              <div class="chart-card">
+                <p class="chart-title">Estado emocional — esta semana</p>
+                <p class="chart-sub">Promedio diario de respuestas</p>
+                <div class="bar-chart">
+                  <div class="bar-group">
+                    <div
+                      class="bar"
+                      style="height: 70%; background: #d72b2b; opacity: 0.8"
+                    ></div>
+                    <span class="bar-label">Lun</span>
+                  </div>
+                  <div class="bar-group">
+                    <div
+                      class="bar"
+                      style="height: 55%; background: #d72b2b; opacity: 0.8"
+                    ></div>
+                    <span class="bar-label">Mar</span>
+                  </div>
+                  <div class="bar-group">
+                    <div
+                      class="bar"
+                      style="height: 80%; background: #d72b2b"
+                    ></div>
+                    <span class="bar-label">Mié</span>
+                  </div>
+                  <div class="bar-group">
+                    <div
+                      class="bar"
+                      style="height: 60%; background: #d72b2b; opacity: 0.8"
+                    ></div>
+                    <span class="bar-label">Jue</span>
+                  </div>
+                  <div class="bar-group">
+                    <div
+                      class="bar"
+                      style="height: 75%; background: #d72b2b"
+                    ></div>
+                    <span class="bar-label">Vie</span>
+                  </div>
+                  <div class="bar-group">
+                    <div
+                      class="bar"
+                      style="height: 40%; background: #d72b2b; opacity: 0.5"
+                    ></div>
+                    <span class="bar-label">Sáb</span>
+                  </div>
+                  <div class="bar-group">
+                    <div
+                      class="bar"
+                      style="height: 30%; background: #d72b2b; opacity: 0.4"
+                    ></div>
+                    <span class="bar-label">Dom</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chart-card">
+                <p class="chart-title">Distribución de ánimo hoy</p>
+                <p class="chart-sub">47 respuestas registradas</p>
+                <div class="emoji-dist">
+                  <div class="emoji-row">
+                    <i
+                      class="fa-regular fa-face-grin-stars"
+                      style="color: #2a9b5b"
+                    ></i>
+                    <div class="track">
+                      <div
+                        class="fill"
+                        style="width: 38%; background: #2a9b5b"
+                      ></div>
+                    </div>
+                    <span class="pct">38%</span>
+                  </div>
+                  <div class="emoji-row">
+                    <i
+                      class="fa-regular fa-face-smile"
+                      style="color: #5aad6e"
+                    ></i>
+                    <div class="track">
+                      <div
+                        class="fill"
+                        style="width: 24%; background: #5aad6e"
+                      ></div>
+                    </div>
+                    <span class="pct">24%</span>
+                  </div>
+                  <div class="emoji-row">
+                    <i
+                      class="fa-regular fa-face-meh"
+                      style="color: #e07b0d"
+                    ></i>
+                    <div class="track">
+                      <div
+                        class="fill"
+                        style="width: 21%; background: #e07b0d"
+                      ></div>
+                    </div>
+                    <span class="pct">21%</span>
+                  </div>
+                  <div class="emoji-row">
+                    <i
+                      class="fa-regular fa-face-frown"
+                      style="color: #d72b2b; opacity: 0.8"
+                    ></i>
+                    <div class="track">
+                      <div
+                        class="fill"
+                        style="width: 12%; background: #d72b2b; opacity: 0.8"
+                      ></div>
+                    </div>
+                    <span class="pct">12%</span>
+                  </div>
+                  <div class="emoji-row">
+                    <i
+                      class="fa-regular fa-face-tired"
+                      style="color: #d72b2b"
+                    ></i>
+                    <div class="track">
+                      <div
+                        class="fill"
+                        style="width: 5%; background: #d72b2b"
+                      ></div>
+                    </div>
+                    <span class="pct">5%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── ENCUESTAS ───────────────────────────────── -->
+          <div class="section" id="section-encuestas">
+            <div class="page-header">
+              <h1>Encuestas</h1>
+              <p>5 encuestas activas registradas esta semana</p>
+            </div>
+
+            <div class="table-card">
+              <div class="table-head">
+                <strong>Registro de encuestas</strong>
+                <button class="btn-sm btn-ghost" onclick="openExportModal()">
+                  <i class="fa-solid fa-download"></i> Exportar tabla
+                </button>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Trabajador</th>
+                    <th>Fecha</th>
+                    <th>Ánimo</th>
+                    <th>Energía</th>
+                    <th>Ambiente</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>#00412</strong></td>
+                    <td>Hoy 08:14</td>
+                    <td>
+                      <i
+                        class="fa-regular fa-face-grin-stars"
+                        style="color: #2a9b5b; font-size: 18px"
+                      ></i>
+                    </td>
+                    <td>8/10</td>
+                    <td>
+                      <i
+                        class="fa-regular fa-thumbs-up"
+                        style="color: #2a9b5b; font-size: 18px"
+                      ></i>
+                    </td>
+                    <td>
+                      <span class="badge badge-green"
+                        ><i
+                          class="fa-solid fa-circle"
+                          style="font-size: 7px"
+                        ></i>
+                        Bien</span
+                      >
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>#00389</strong></td>
+                    <td>Hoy 08:22</td>
+                    <td>
+                      <i
+                        class="fa-regular fa-face-meh"
+                        style="color: #e07b0d; font-size: 18px"
+                      ></i>
+                    </td>
+                    <td>5/10</td>
+                    <td>
+                      <i
+                        class="fa-regular fa-face-meh"
+                        style="color: #e07b0d; font-size: 18px"
+                      ></i>
+                    </td>
+                    <td>
+                      <span class="badge badge-amber"
+                        ><i
+                          class="fa-solid fa-circle"
+                          style="font-size: 7px"
+                        ></i>
+                        Atención</span
+                      >
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>#00451</strong></td>
+                    <td>Hoy 08:35</td>
+                    <td>
+                      <i
+                        class="fa-regular fa-face-tired"
+                        style="color: #d72b2b; font-size: 18px"
+                      ></i>
+                    </td>
+                    <td>2/10</td>
+                    <td>
+                      <i
+                        class="fa-regular fa-face-frown-open"
+                        style="color: #d72b2b; font-size: 18px"
+                      ></i>
+                    </td>
+                    <td>
+                      <span class="badge badge-red"
+                        ><i
+                          class="fa-solid fa-circle"
+                          style="font-size: 7px"
+                        ></i>
+                        Alerta</span
+                      >
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>#00307</strong></td>
+                    <td>Hoy 09:01</td>
+                    <td>
+                      <i
+                        class="fa-regular fa-face-smile"
+                        style="color: #2a9b5b; font-size: 18px"
+                      ></i>
+                    </td>
+                    <td>7/10</td>
+                    <td>
+                      <i
+                        class="fa-solid fa-handshake"
+                        style="color: #2a9b5b; font-size: 18px"
+                      ></i>
+                    </td>
+                    <td>
+                      <span class="badge badge-green"
+                        ><i
+                          class="fa-solid fa-circle"
+                          style="font-size: 7px"
+                        ></i>
+                        Bien</span
+                      >
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>#00488</strong></td>
+                    <td>Hoy 09:12</td>
+                    <td>
+                      <i
+                        class="fa-regular fa-face-meh"
+                        style="color: #e07b0d; font-size: 18px"
+                      ></i>
+                    </td>
+                    <td>4/10</td>
+                    <td>
+                      <i
+                        class="fa-solid fa-people-arrows"
+                        style="color: #e07b0d; font-size: 18px"
+                      ></i>
+                    </td>
+                    <td>
+                      <span class="badge badge-amber"
+                        ><i
+                          class="fa-solid fa-circle"
+                          style="font-size: 7px"
+                        ></i>
+                        Atención</span
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── TRABAJADORES ────────────────────────────── -->
+          <div class="section" id="section-trabajadores">
+            <div class="page-header">
+              <h1>Trabajadores</h1>
+              <p>56 trabajadores registrados en este sistema</p>
+            </div>
+            <div class="table-card">
+              <div class="table-head">
+                <strong>Listado de trabajadores</strong>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Área</th>
+                    <th>Última encuesta</th>
+                    <th>Prom. ánimo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#00412</td>
+                    <td>Carlos Méndez</td>
+                    <td>Producción</td>
+                    <td>Hoy 08:14</td>
+                    <td><span class="badge badge-green">4.8</span></td>
+                  </tr>
+                  <tr>
+                    <td>#00389</td>
+                    <td>Ana Cifuentes</td>
+                    <td>Logística</td>
+                    <td>Hoy 08:22</td>
+                    <td><span class="badge badge-amber">3.1</span></td>
+                  </tr>
+                  <tr>
+                    <td>#00451</td>
+                    <td>Roberto Lima</td>
+                    <td>Producción</td>
+                    <td>Hoy 08:35</td>
+                    <td><span class="badge badge-red">1.9</span></td>
+                  </tr>
+                  <tr>
+                    <td>#00307</td>
+                    <td>Sofía Pérez</td>
+                    <td>Calidad</td>
+                    <td>Hoy 09:01</td>
+                    <td><span class="badge badge-green">4.2</span></td>
+                  </tr>
+                  <tr>
+                    <td>#00488</td>
+                    <td>Luis Morales</td>
+                    <td>Mantenimiento</td>
+                    <td>Hoy 09:12</td>
+                    <td><span class="badge badge-amber">2.8</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── EXPORTAR ────────────────────────────────── -->
+          <div class="section" id="section-exportar">
+            <div class="page-header">
+              <h1>Exportar Datos</h1>
+              <p>
+                Descarga los datos del período seleccionado en el formato que
+                prefieras
+              </p>
+            </div>
+            <div class="export-grid">
+              <div class="export-card" onclick="openExportModal()">
+                <div class="export-icon" style="background: #e8f5e9">
+                  <i class="fa-solid fa-file-excel" style="color: #2a7a2a"></i>
+                </div>
+                <h3>Excel (.xlsx)</h3>
+                <p>
+                  Hoja de cálculo con todas las respuestas y métricas por
+                  trabajador.
+                </p>
+              </div>
+              <div class="export-card" onclick="openExportModal()">
+                <div class="export-icon" style="background: #e8f0fe">
+                  <i class="fa-brands fa-google" style="color: #1a73e8"></i>
+                </div>
+                <h3>Google Sheets</h3>
+                <p>
+                  Exporta directamente a una hoja compartida de Google Drive.
+                </p>
+              </div>
+              <div class="export-card" onclick="openExportModal()">
+                <div class="export-icon" style="background: #fff3e0">
+                  <i class="fa-solid fa-file-csv" style="color: #e07b0d"></i>
+                </div>
+                <h3>CSV / TXT</h3>
+                <p>
+                  Formato plano compatible con cualquier herramienta o IA
+                  externa.
+                </p>
+              </div>
+              <div class="export-card" onclick="openExportModal()">
+                <div class="export-icon" style="background: #fce4ec">
+                  <i class="fa-solid fa-file-pdf" style="color: #c62828"></i>
+                </div>
+                <h3>Reporte PDF</h3>
+                <p>
+                  Informe visual listo para imprimir o compartir con dirección.
+                </p>
+              </div>
+              <div class="export-card" onclick="openExportModal()">
+                <div class="export-icon" style="background: #f3e5f5">
+                  <i class="fa-solid fa-robot" style="color: #7b1fa2"></i>
+                </div>
+                <h3>Analizar con IA</h3>
+                <p>
+                  Exporta los datos y genera un resumen automático de
+                  tendencias.
+                </p>
+              </div>
+              <div class="export-card" onclick="openExportModal()">
+                <div class="export-icon" style="background: #e3f2fd">
+                  <i class="fa-solid fa-link" style="color: #1565c0"></i>
+                </div>
+                <h3>Enlace compartido</h3>
+                <p>
+                  Genera un enlace de solo lectura para el equipo directivo.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── HISTORIAL ───────────────────────────────── -->
+          <div class="section" id="section-historial">
+            <div class="page-header">
+              <h1>Historial</h1>
+              <p>Registros de las últimas 4 semanas</p>
+            </div>
+            <div class="table-card">
+              <div class="table-head"><strong>Resumen semanal</strong></div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Semana</th>
+                    <th>Respuestas</th>
+                    <th>Prom. bienestar</th>
+                    <th>Participación</th>
+                    <th>Alertas</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>2–8 Jun</td>
+                    <td>284</td>
+                    <td>3.8/5</td>
+                    <td>84%</td>
+                    <td><span class="badge badge-amber">3</span></td>
+                  </tr>
+                  <tr>
+                    <td>26 May–1 Jun</td>
+                    <td>261</td>
+                    <td>4.1/5</td>
+                    <td>79%</td>
+                    <td><span class="badge badge-green">1</span></td>
+                  </tr>
+                  <tr>
+                    <td>19–25 May</td>
+                    <td>240</td>
+                    <td>3.5/5</td>
+                    <td>73%</td>
+                    <td><span class="badge badge-red">6</span></td>
+                  </tr>
+                  <tr>
+                    <td>12–18 May</td>
+                    <td>255</td>
+                    <td>3.9/5</td>
+                    <td>77%</td>
+                    <td><span class="badge badge-amber">2</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── CONFIGURACIÓN ──────────────────────────── -->
+          <div class="section" id="section-configuracion">
+            <div class="page-header">
+              <h1>Configuración</h1>
+              <p>Personaliza la apariencia y comportamiento de las tablets</p>
+            </div>
+            <div class="config-grid">
+              <div class="config-card">
+                <h3><i class="fa-solid fa-palette"></i> Apariencia</h3>
+                <div class="config-row">
+                  Color principal
+                  <div style="display: flex; gap: 8px">
+                    <div
+                      class="color-swatch active"
+                      style="background: #d72b2b"
+                      onclick="selectColor(this, '#D72B2B')"
+                    ></div>
+                    <div
+                      class="color-swatch"
+                      style="background: #1565c0"
+                      onclick="selectColor(this, '#1565C0')"
+                    ></div>
+                    <div
+                      class="color-swatch"
+                      style="background: #2a7a2a"
+                      onclick="selectColor(this, '#2A7A2A')"
+                    ></div>
+                    <div
+                      class="color-swatch"
+                      style="background: #7b1fa2"
+                      onclick="selectColor(this, '#7B1FA2')"
+                    ></div>
+                  </div>
+                </div>
+                <div class="config-row">
+                  Modo oscuro en reposo <span>Salva pantallas automático</span>
+                  <div class="toggle on" onclick="toggleSwitch(this)"></div>
+                </div>
+                <div class="config-row">
+                  Logo personalizado <span>Subir imagen</span>
+                  <button
+                    class="btn-sm btn-ghost"
+                    style="padding: 5px 12px; font-size: 11px"
+                  >
+                    <i class="fa-solid fa-upload"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="config-card">
+                <h3><i class="fa-solid fa-clock"></i> Comportamiento</h3>
+                <div class="config-row">
+                  Reposo tras inactividad <span>Minutos sin uso</span>
+                  <input
+                    type="number"
+                    value="5"
+                    min="1"
+                    max="60"
+                    style="
+                      width: 52px;
+                      padding: 4px 8px;
+                      border: 1.5px solid var(--border);
+                      border-radius: 7px;
+                      font-family: inherit;
+                      font-size: 13px;
+                      text-align: center;
+                    "
+                  />
+                </div>
+                <div class="config-row">
+                  Encuesta cada X horas <span>Frecuencia por turno</span>
+                  <input
+                    type="number"
+                    value="4"
+                    min="1"
+                    max="12"
+                    style="
+                      width: 52px;
+                      padding: 4px 8px;
+                      border: 1.5px solid var(--border);
+                      border-radius: 7px;
+                      font-family: inherit;
+                      font-size: 13px;
+                      text-align: center;
+                    "
+                  />
+                </div>
+                <div class="config-row">
+                  Modo anónimo <span>No mostrar ID en dashboard</span>
+                  <div class="toggle off" onclick="toggleSwitch(this)"></div>
+                </div>
+              </div>
+
+              <div class="config-card">
+                <h3>
+                  <i class="fa-solid fa-clipboard-question"></i> Módulos activos
+                </h3>
+                <div class="config-row">
+                  Emojis de ánimo
+                  <div class="toggle on" onclick="toggleSwitch(this)"></div>
+                </div>
+                <div class="config-row">
+                  Barra de energía (1–10)
+                  <div class="toggle on" onclick="toggleSwitch(this)"></div>
+                </div>
+                <div class="config-row">
+                  Preguntas abiertas
+                  <div class="toggle on" onclick="toggleSwitch(this)"></div>
+                </div>
+                <div class="config-row">
+                  Encuestas de ambiente
+                  <div class="toggle off" onclick="toggleSwitch(this)"></div>
+                </div>
+              </div>
+
+              <div class="config-card">
+                <h3><i class="fa-solid fa-bell"></i> Alertas automáticas</h3>
+                <div class="config-row">
+                  Alertar si ánimo &lt; 2
+                  <div class="toggle on" onclick="toggleSwitch(this)"></div>
+                </div>
+                <div class="config-row">
+                  Notificar por correo
+                  <div class="toggle on" onclick="toggleSwitch(this)"></div>
+                </div>
+                <div class="config-row">
+                  Informe diario automático
+                  <div class="toggle off" onclick="toggleSwitch(this)"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /content -->
+      </div>
+      <!-- /main -->
+    </div>
+    <!-- /shell -->
+
+    <!-- EXPORT MODAL -->
+    <div class="modal-backdrop" id="exportModal">
+      <div class="modal">
+        <h3>Exportar datos</h3>
+        <p>
+          Selecciona el rango y confirma. El archivo estará listo para
+          descargar.
+        </p>
+        <div class="modal-actions">
+          <button class="btn-sm btn-ghost" onclick="closeExportModal()">
+            Cancelar
+          </button>
+          <button class="btn-sm btn-red" onclick="closeExportModal()">
+            <i class="fa-solid fa-download"></i> Descargar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const TITLES = {
+        resumen: "Resumen General",
+        encuestas: "Encuestas",
+        trabajadores: "Trabajadores",
+        exportar: "Exportar Datos",
+        historial: "Historial",
+        configuracion: "Configuración",
+      };
+
+      function goTo(name, el) {
+        document
+          .querySelectorAll(".section")
+          .forEach((s) => s.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) => n.classList.remove("active"));
+        document.getElementById(`section-${name}`).classList.add("active");
+        el.classList.add("active");
+        document.getElementById("topbarTitle").textContent = TITLES[name];
+      }
+
+      function openExportModal() {
+        document.getElementById("exportModal").classList.add("open");
+      }
+      function closeExportModal() {
+        document.getElementById("exportModal").classList.remove("open");
+      }
+
+      function toggleSwitch(el) {
+        el.classList.toggle("on");
+        el.classList.toggle("off");
+      }
+
+      function selectColor(el, color) {
+        document
+          .querySelectorAll(".color-swatch")
+          .forEach((s) => s.classList.remove("active"));
+        el.classList.add("active");
+        document.documentElement.style.setProperty("--red", color);
+      }
+    </script>
+  </body>
+</html>
